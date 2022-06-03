@@ -61,7 +61,7 @@ black-check:
 
 .PHONY: isort-check
 isort-check:
-	isort $(source_code) tests --multi-line=VERTICAL_HANGING_INDENT --trailing-comma --no-sections --diff --check
+	$(isort) $(source_code) tests --diff --check
 
 .PHONY: lint
 lint: mypy flake8 black-check isort-check pylint
@@ -90,7 +90,7 @@ black:
 
 .PHONY: isort
 isort:
-	ve/bin/isort $(source_code) tests --multi-line=VERTICAL_HANGING_INDENT --trailing-comma --no-sections
+	$(isort) $(source_code) tests
 
 ########################################################################################
 # Cleanup targets
