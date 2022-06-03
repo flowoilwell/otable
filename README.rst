@@ -38,18 +38,18 @@ values, we can do that with OColumns.
 
 Now we can access the attributes as if they were simple values in lists.
 
-    >>> names[1]
-    'Simon Snakerson'
-    >>> legs[1]
-    0
+>>> names[1]
+'Simon Snakerson'
+>>> legs[1]
+0
 
 Any modifications to the values in the columns are passed on to the underlying objects.
 
-    >>> names[1] = 'Simon'
-    >>> names[1]
-    'Simon'
-    >>> snake.name
-    'Simon'
+>>> names[1] = 'Simon'
+>>> names[1]
+'Simon'
+>>> snake.name
+'Simon'
 
 
 OTable
@@ -68,28 +68,28 @@ The easiest way to build an OTable is to pass it a sequence of OColumns.
 
 Now that we have our table, we can interrogate it.  Indexing a table returns a row.
 
-    >>> table[0]
-    ['Ralf', 4]
+>>> table[0]
+['Ralf', 4]
 
 Iterating over a table gives us the rows.
 
-    >>> list(table)
-    [['Ralf', 4], ['Simon', 0], ['Tripod', 3]]
+>>> list(table)
+[['Ralf', 4], ['Simon', 0], ['Tripod', 3]]
 
 Column names can also be retrieved.
 
-    >>> table.column_names()
-    ['name', 'legs']
+>>> table.column_names()
+['name', 'legs']
 
 Tables provide a nice ``__repr__`` for displaying themselves.
 
-    >>> table
-    ┌────────┬──────┐
-    │ name   │ legs │
-    ╞════════╪══════╡
-    │ Ralf   │ 4    │
-    ├────────┼──────┤
-    │ Simon  │ 0    │
-    ├────────┼──────┤
-    │ Tripod │ 3    │
-    └────────┴──────┘
+>>> table
+┌────────┬──────┐
+│ name   │ legs │
+╞════════╪══════╡
+│ Ralf   │ 4    │
+├────────┼──────┤
+│ Simon  │ 0    │
+├────────┼──────┤
+│ Tripod │ 3    │
+└────────┴──────┘
