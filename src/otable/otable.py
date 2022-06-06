@@ -41,7 +41,6 @@ class OTable(collections.abc.Sequence[Any]):
     def __init__(self, columns: Sequence[OColumn]):
         assert len(columns) > 0, 'at least one column required'
         self.columns = columns
-        self.columns_by_name = dict((column.attribute, column) for column in columns)
 
     def __getitem__(self, item: Any) -> Any:
         """Fetch a row of data by index."""
@@ -55,7 +54,7 @@ class OTable(collections.abc.Sequence[Any]):
 
     def column_names(self) -> list[str]:
         """The names of the columns in table order."""
-        return list(self.columns_by_name.keys())
+        return list(column.attribute for column in self.columns)
 
     def __repr__(self) -> str:
         return str(termtables.to_string(self, header=self.column_names()))
