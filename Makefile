@@ -48,7 +48,7 @@ pylint:
 
 .PHONY: flake8
 flake8:
-	ve/bin/flake8 $(source_code)
+	ve/bin/flake8 $(source_code) tests
 
 .PHONY: mypy
 mypy:
