@@ -12,7 +12,6 @@ class OColumn(collections.abc.MutableSequence[Any]):
 
     attribute: str
     objects: list[object]
-    name: str
 
     def __init__(self, attribute: str, objects: list[object]):
         self.objects = objects
