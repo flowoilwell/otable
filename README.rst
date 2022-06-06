@@ -66,6 +66,10 @@ The easiest way to build an OTable is to pass it a sequence of OColumns.
 
     table = OTable(columns=(names, legs))
 
+Note that even though all the tables in this example are backed by the same kind of
+object, it is permissible to include columns in a table that are backed by different
+sets of objects.
+
 Now that we have our table, we can interrogate it.  Indexing a table returns a row.
 
 >>> table[0]
