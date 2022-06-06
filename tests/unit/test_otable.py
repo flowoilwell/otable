@@ -29,6 +29,31 @@ class TestOColumn(unittest.TestCase):
         names = OColumn('name', objects=animals)
         self.assertEqual(len(names), len(animals))
 
+    def test_getting_slice(self):
+        """The columns can be sliced and return new columns."""
+        names = OColumn('name', objects=animals)
+        sliced = names[:2]
+        # The result is an OColumn.
+        self.assertIsInstance(sliced, OColumn)
+        # The result is a different instance than the original OColumn.
+        self.assertIsNot(names, sliced)
+        # The expected values are present.
+        self.assertEqual(list(sliced), ['Ralf', 'Simon'])
+
+    def test_setting_slice(self):
+        """The columns can be assigned by a slice."""
+        names = OColumn('name', objects=animals)
+        names[:2] = ['Fred', 'Sam']
+        # The expected values are present.
+        self.assertEqual(list(names), ['Fred', 'Sam', 'Tripod'])
+
+    def test_deleting_slice(self):
+        """The columns can be deleted by a slice."""
+        names = OColumn('name', objects=animals)
+        del names[:2]
+        # The expected values are present.
+        self.assertEqual(list(names), ['Tripod'])
+
 
 class TestOTable(unittest.TestCase):
     """Tests for the OTable class."""
