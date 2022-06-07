@@ -1,0 +1,4 @@
+[project]
+name = 'otable'
+version = '0.0'
+dependencies = ['manuel', 'termtables']
