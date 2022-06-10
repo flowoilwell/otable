@@ -18,14 +18,15 @@ values, we can do that with OColumns.
 
 .. code:: python
 
+    from dataclasses import dataclass
     from otable import OColumn
 
+    @dataclass
     class Animal:
         """An animal with some number of legs."""
 
-        def __init__(self, name: str, legs: int):
-            self.name = name
-            self.legs = legs
+        name: str
+        legs: int
 
     dog = Animal(name='Ralf', legs=4)
     snake = Animal(name='Simon Snakerson', legs=0)
@@ -66,10 +67,6 @@ The easiest way to build an OTable is to pass it a sequence of OColumns.
 
     table = OTable(columns=(names, legs))
 
-Note that even though all the tables in this example are backed by the same kind of
-object, it is permissible to include columns in a table that are backed by different
-sets of objects.
-
 Now that we have our table, we can interrogate it.  Indexing a table returns a row.
 
 >>> table[0]
@@ -80,20 +77,99 @@ Iterating over a table gives us the rows.
 >>> list(table)
 [['Ralf', 4], ['Simon', 0], ['Tripod', 3]]
 
-Column names can also be retrieved.
+
+Names and attributes
+--------------------
+
+Lets say we have objects that represent an animal's human friend.
+
+.. code:: python
+
+    @dataclass
+    class HumanFriend:
+        """An animal's human friend."""
+
+        name: str
+
+Instances of ``HumanFriend`` have an attribute ``name``, but for the column name we
+might want to use "friend" instead of "name" which has already been used to name another
+column.  In that case, we can specify an ``attribute`` when constructing the column
+which will be read.
+
+.. code:: python
+
+    alice = HumanFriend('Alice')
+    bob = HumanFriend('Bob')
+
+    friends = OColumn('friend', [alice, bob, alice], attribute='name')
+
+    table = OTable(columns=(names, legs, friends))
+
+The table reflects the ``name`` of each columns (not the ``attribute``).
 
 >>> table.column_names()
-['name', 'legs']
+['name', 'legs', 'friend']
+
+
+Table rendering
+---------------
 
 Tables provide a nice ``__repr__`` for displaying themselves.
 
 >>> table
-┌────────┬──────┐
-│ name   │ legs │
-╞════════╪══════╡
-│ Ralf   │ 4    │
-├────────┼──────┤
-│ Simon  │ 0    │
-├────────┼──────┤
-│ Tripod │ 3    │
-└────────┴──────┘
+┌────────┬──────┬────────┐
+│ name   │ legs │ friend │
+╞════════╪══════╪════════╡
+│ Ralf   │ 4    │ Alice  │
+├────────┼──────┼────────┤
+│ Simon  │ 0    │ Bob    │
+├────────┼──────┼────────┤
+│ Tripod │ 3    │ Alice  │
+└────────┴──────┴────────┘
+
+
+Accessing values
+-----------------
+
+Values in tables can be accessed as column indexes.
+
+>>> row = table[1]
+>>> row[2]
+'Bob'
+
+The values can also be accessed by name.
+
+>>> row.friend
+'Bob'
+
+
+Mutating tables
+---------------
+
+Values in tables can be changed (and they change the values in the constituent columns
+which change the values in the underlying objects).
+
+Note how changing one row can affect other rows because the underlying objects are
+mutated.
+
+>>> table
+┌────────┬──────┬────────┐
+│ name   │ legs │ friend │
+╞════════╪══════╪════════╡
+│ Ralf   │ 4    │ Alice  │
+├────────┼──────┼────────┤
+│ Simon  │ 0    │ Bob    │
+├────────┼──────┼────────┤
+│ Tripod │ 3    │ Alice  │
+└────────┴──────┴────────┘
+>>> table[2][2] = 'Charlie'
+>>> table
+┌────────┬──────┬─────────┐
+│ name   │ legs │ friend  │
+╞════════╪══════╪═════════╡
+│ Ralf   │ 4    │ Charlie │
+├────────┼──────┼─────────┤
+│ Simon  │ 0    │ Bob     │
+├────────┼──────┼─────────┤
+│ Tripod │ 3    │ Charlie │
+└────────┴──────┴─────────┘

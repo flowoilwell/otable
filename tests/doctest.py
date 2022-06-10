@@ -10,5 +10,5 @@ def test_suite():
     return manuel.testing.TestSuite(m, '../README.rst')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     unittest.TextTestRunner().run(test_suite())
