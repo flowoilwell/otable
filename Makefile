@@ -21,7 +21,11 @@ isort := ve/bin/isort --multi-line=VERTICAL_HANGING_INDENT --trailing-comma --no
 # run.  I.e., it is ok if "make lint" generates an error before "make" has been run.
 
 .PHONY: build
-build: ve development-utilities
+build: ve development-utilities install-flake8-plugins
+
+.PHONY: install-flake8-plugins
+install-flake8-plugins:
+	$(pip-install) flake8-docstrings
 
 ve:
 	python3.10 -m venv ve
@@ -48,7 +52,8 @@ pylint:
 
 .PHONY: flake8
 flake8:
-	ve/bin/flake8 $(source_code) tests
+	ve/bin/flake8 $(source_code) tests \
+	    --docstring-convention=all --extend-ignore=D105,D203,D213,D413,D407,D400
 
 .PHONY: mypy
 mypy:

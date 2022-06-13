@@ -1,7 +1,7 @@
 """Tests for OTable and related code."""
 
 import unittest
-from otable import OColumn, OTable
+from otable import OColumn, ORow, OTable
 
 
 class Animal:
@@ -24,16 +24,16 @@ cat = Animal('Tripod', legs=3)
 animals = [dog, snake, cat]
 
 
-class TestOTable(unittest.TestCase):
-    """Tests for the OTable class."""
+class TestORow(unittest.TestCase):
+    """Tests for the ORow class."""
 
     def test_creation(self):
-        """Creating an OTable instance works."""
-        columns = [OColumn('name', objects=animals), OColumn('legs', objects=animals)]
-        OTable(columns)
+        """Creating an ORow instance works."""
+        ORow(['name', 'legs'], [dog, dog], ['name', 'legs'])
 
     def test_len(self):
-        """The length of the column reflects the length of the underlying sequence."""
+        """The length of the row reflects the width of the table."""
         columns = [OColumn('name', objects=animals), OColumn('legs', objects=animals)]
         table = OTable(columns)
-        self.assertEqual(len(table), len(animals))
+        row = table[1]
+        self.assertEqual(len(row), len(columns))
