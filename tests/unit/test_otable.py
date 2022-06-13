@@ -1,3 +1,5 @@
+"""Tests for OTable and related code."""
+
 import unittest
 from otable import OColumn, OTable
 
@@ -6,6 +8,11 @@ class Animal:
     """An animal with some number of legs."""
 
     def __init__(self, name: str, legs: int):
+        """Initiate an instance.
+
+        :param name: The animal's name.
+        :param legs: How many legs the animal has.
+        """
         self.name = name
         self.legs = legs
 
@@ -21,7 +28,7 @@ class TestOColumn(unittest.TestCase):
     """Tests for the OColumn class."""
 
     def test_creation(self):
-        """ "Creating an OColumn instance works."""
+        """Creating an OColumn instance works."""
         OColumn([], 'attribute')
 
     def test_len(self):

@@ -1,3 +1,5 @@
+"""An entry point for running the doctests."""
+
 import manuel.codeblock
 import manuel.doctest
 import manuel.testing
@@ -5,6 +7,7 @@ import unittest
 
 
 def test_suite():
+    """Construct a Manuel-enhanced test suite for running the doctests."""
     m = manuel.doctest.Manuel()
     m += manuel.codeblock.Manuel()
     return manuel.testing.TestSuite(m, '../README.rst')

@@ -17,6 +17,13 @@ class OColumn(collections.abc.MutableSequence[T]):
     name: str
 
     def __init__(self, name: str, objects: list[object], attribute: str | None = None):
+        """Initialize the object.
+
+        :param name: The name of the value exposed in the column; normally singular.
+        :param objects: The objects whos values are exposed.
+        :param attribute: The attribute of the objects that contain the values to expose
+            in the column.  If not provided, the value of "name" is used.
+        """
         self.name = name
         self.objects = objects[:]
         if attribute is None:
@@ -29,7 +36,9 @@ class OColumn(collections.abc.MutableSequence[T]):
         ...
 
     @overload
-    def __getitem__(self, item: slice) -> collections.abc.MutableSequence[T]:  # pragma: nocover
+    def __getitem__(
+        self, item: slice
+    ) -> collections.abc.MutableSequence[T]:  # pragma: nocover
         ...
 
     # Implementation of above signatures.
@@ -98,6 +107,7 @@ class OColumn(collections.abc.MutableSequence[T]):
         return len(self.objects)
 
     def insert(self, index: int, value: T) -> None:
+        """Insert new values.  Not supported!"""
         raise RuntimeError('inserts are not allowed')
 
 
@@ -113,6 +123,12 @@ class ORow(collections.abc.MutableSequence[T]):
     def __init__(
         self, names: Sequence[str], objects: Sequence[object], attributes: Sequence[str]
     ):
+        """Initialize the object.
+
+        :param names: The names of the values exposed in the row; normally singular.
+        :param objects: The objects whos values are exposed.
+        :param attributes: The attributes of the objects to expose.
+        """
         self.names = list(names)
         self.objects = list(objects)
         self.attributes = list(attributes)
@@ -170,6 +186,7 @@ class ORow(collections.abc.MutableSequence[T]):
         return len(self.objects)
 
     def insert(self, index: int, value: T) -> None:
+        """Insert new values.  Not supported!"""
         raise RuntimeError('inserts are not allowed')
 
     def __repr__(self) -> str:
@@ -187,6 +204,10 @@ class OTable(collections.abc.Sequence[T]):
     columns: Sequence[OColumn[T]]
 
     def __init__(self, columns: Sequence[OColumn[T]]):
+        """Initialize the object.
+
+        :param columns: The columns that comprise the table.
+        """
         assert len(columns) > 0, 'at least one column required'
         self.columns = columns[:]
 
@@ -211,7 +232,7 @@ class OTable(collections.abc.Sequence[T]):
         return len(self.columns[0])
 
     def column_names(self) -> list[str]:
-        """The names of the columns in table order."""
+        """Return the names of the columns in table order."""
         return list(column.name for column in self.columns)
 
     def __repr__(self) -> str:
