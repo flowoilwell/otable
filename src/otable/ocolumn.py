@@ -19,7 +19,9 @@ class OColumn(collections.abc.MutableSequence[T]):
     objects: list[object]
     name: str
 
-    def __init__(self, name: str, objects: list[object], attribute: str | None = None):
+    def __init__(
+        self, name: str, objects: Sequence[object], attribute: str | None = None
+    ):
         """Initialize the object.
 
         :param name: The name of the value exposed in the column; normally singular.
@@ -28,7 +30,7 @@ class OColumn(collections.abc.MutableSequence[T]):
             in the column.  If not provided, the value of "name" is used.
         """
         self.name = name
-        self.objects = objects[:]
+        self.objects = list(objects)
         if attribute is None:
             self.attribute = name
         else:
