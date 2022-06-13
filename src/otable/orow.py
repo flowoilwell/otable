@@ -12,13 +12,12 @@ class ORow(collections.abc.MutableSequence[T]):
     # The MutableSequence base class does two things, it provides type information about
     # the methods, and it provides implementations of most of the interface that depend
     # on the few methods implemented here.
-    
 
     __slots__ = ('attributes', 'objects', 'names')
 
-    attributes: list[str]
-    objects: list[object]
-    names: list[str]
+    attributes: Sequence[str]
+    objects: Sequence[object]
+    names: Sequence[str]
 
     def __init__(
         self, names: Sequence[str], objects: Sequence[object], attributes: Sequence[str]
@@ -29,9 +28,9 @@ class ORow(collections.abc.MutableSequence[T]):
         :param objects: The objects who's values are exposed.
         :param attributes: The attributes of the objects to expose.
         """
-        self.names = list(names)
-        self.objects = list(objects)
-        self.attributes = list(attributes)
+        self.names = tuple(names)
+        self.objects = tuple(objects)
+        self.attributes = tuple(attributes)
 
     @overload
     def __getitem__(self, item: int) -> T:
