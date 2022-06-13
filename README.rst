@@ -105,7 +105,7 @@ which will be read.
 
     table = OTable(columns=(names, legs, friends))
 
-The table reflects the ``name`` of each columns (not the ``attribute``).
+The table reflects the ``name`` of each column (not the ``attribute``).
 
 >>> table.column_names()
 ['name', 'legs', 'friend']
