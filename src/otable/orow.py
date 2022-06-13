@@ -9,6 +9,11 @@ T = TypeVar('T')
 class ORow(collections.abc.MutableSequence[T]):
     """A sequence that exposes a set of attributes from objects as a sequence."""
 
+    # The MutableSequence base class does two things, it provides type information about
+    # the methods, and it provides implementations of most of the interface that depend
+    # on the few methods implemented here.
+    
+
     __slots__ = ('attributes', 'objects', 'names')
 
     attributes: list[str]

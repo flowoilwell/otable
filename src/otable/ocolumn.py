@@ -9,6 +9,10 @@ T = TypeVar('T')
 class OColumn(collections.abc.MutableSequence[T]):
     """A sequence that exposes an attribute from a sequence of objects."""
 
+    # The MutableSequence base class does two things, it provides type information about
+    # the methods, and it provides implementations of most of the interface that depend
+    # on the few methods implemented here.
+
     __slots__ = ('attribute', 'objects', 'name')
 
     attribute: str

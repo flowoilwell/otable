@@ -12,6 +12,10 @@ T = TypeVar('T')
 class OTable(collections.abc.Sequence[T]):
     """A collection of columns backed by objects but accessible as a list of lists."""
 
+    # The Sequence base class does two things, it provides type information about the
+    # methods, and it provides implementations of most of the interface that depend on
+    # the few methods implemented here.
+
     __slots__ = ('columns',)
 
     columns: Sequence[OColumn[T]]
