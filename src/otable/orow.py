@@ -81,7 +81,7 @@ class ORow(collections.abc.MutableSequence[T]):
 
     # Implementation of above signatures.
     def __delitem__(self, index: int | slice) -> None:
-        raise ValueError('deleting from rows is not supported')
+        raise RuntimeError('deleting from rows is not supported')
 
     def __len__(self) -> int:
         return len(self.objects)
