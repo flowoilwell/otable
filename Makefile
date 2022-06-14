@@ -38,6 +38,7 @@ ve/bin/%:
 # Utilities we use during development.
 .PHONY: development-utilities
 development-utilities: ve/bin/black
+development-utilities: ve/bin/coverage
 development-utilities: ve/bin/flake8
 development-utilities: ve/bin/isort
 development-utilities: ve/bin/mypy
@@ -79,11 +80,17 @@ unittest:
 doctest:
 	ve/bin/python -m tests.doctest
 
+.PHONY: coverage
+coverage:
+	ve/bin/coverage run --branch -m unittest
+	ve/bin/coverage run --branch --append -m tests.doctest
+	PYTHONWARNINGS=ignore ve/bin/coverage report --ignore-errors --fail-under=100 --show-missing --skip-empty
+
 .PHONY: test
 test: unittest doctest
 
 .PHONY: check
-check: test lint
+check: test lint coverage
 	@echo 'All checks passed!'
 
 ########################################################################################
