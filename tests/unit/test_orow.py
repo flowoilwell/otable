@@ -53,7 +53,8 @@ class TestORow(unittest.TestCase):
     def test_del(self):
         """Deleting a slice of a row is not supported."""
         row = ORow(['name', 'legs'], [dog, dog], ['name', 'legs'])
-        with self.assertRaisesRegex(RuntimeError, 'deleting from rows is not supported'):
+        error = (RuntimeError, 'deleting from rows is not supported')
+        with self.assertRaisesRegex(*error):
             del row[1:2]
 
     def test_bad_name(self):
