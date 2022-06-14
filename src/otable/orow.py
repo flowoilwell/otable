@@ -33,11 +33,13 @@ class ORow(collections.abc.MutableSequence[T]):
         self.attributes = tuple(attributes)
 
     @overload
-    def __getitem__(self, item: int) -> T:
+    def __getitem__(self, item: int) -> T:  # pragma: nocover
         ...
 
     @overload
-    def __getitem__(self, item: slice) -> collections.abc.MutableSequence[T]:
+    def __getitem__(
+        self, item: slice
+    ) -> collections.abc.MutableSequence[T]:  # pragma: nocover
         ...
 
     # Implementation of above signatures.
@@ -54,11 +56,11 @@ class ORow(collections.abc.MutableSequence[T]):
         raise AttributeError
 
     @overload
-    def __setitem__(self, item: int, value: T) -> None:
+    def __setitem__(self, item: int, value: T) -> None:  # pragma: nocover
         ...
 
     @overload
-    def __setitem__(self, item: slice, value: Iterable[T]) -> None:
+    def __setitem__(self, item: slice, value: Iterable[T]) -> None:  # pragma: nocover
         ...
 
     # Implementation of above signatures.
@@ -70,16 +72,16 @@ class ORow(collections.abc.MutableSequence[T]):
         setattr(self.objects[index], self.attributes[index], value)
 
     @overload
-    def __delitem__(self, index: int) -> None:
+    def __delitem__(self, index: int) -> None:  # pragma: nocover
         ...
 
     @overload
-    def __delitem__(self, index: slice) -> None:
+    def __delitem__(self, index: slice) -> None:  # pragma: nocover
         ...
 
     # Implementation of above signatures.
     def __delitem__(self, index: int | slice) -> None:
-        raise ValueError('deleting items from rows is not supported')
+        raise ValueError('deleting from rows is not supported')
 
     def __len__(self) -> int:
         return len(self.objects)
