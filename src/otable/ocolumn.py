@@ -97,11 +97,11 @@ class OColumn(collections.abc.MutableSequence[T]):
             setattr(self.objects[item_index], self.attribute, item_value)
 
     @overload
-    def __delitem__(self, index: int) -> None:
+    def __delitem__(self, index: int) -> None:  # pragma: nocover
         ...
 
     @overload
-    def __delitem__(self, index: slice) -> None:
+    def __delitem__(self, index: slice) -> None:  # pragma: nocover
         ...
 
     # Implementation of above signatures.

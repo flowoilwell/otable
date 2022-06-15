@@ -37,3 +37,10 @@ class TestOTable(unittest.TestCase):
         columns = [OColumn('name', objects=animals), OColumn('legs', objects=animals)]
         table = OTable(columns)
         self.assertEqual(len(table), len(animals))
+
+    def test_slicing(self):
+        """Slicing a table is not supported."""
+        columns = [OColumn('name', objects=animals), OColumn('legs', objects=animals)]
+        table = OTable(columns)
+        with self.assertRaisesRegex(ValueError, 'slicing tables is not supported'):
+            table[1:2]

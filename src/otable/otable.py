@@ -29,11 +29,13 @@ class OTable(collections.abc.Sequence[T]):
         self.columns = columns[:]
 
     @overload
-    def __getitem__(self, item: int) -> T:
+    def __getitem__(self, item: int) -> T:  # pragma: nocover
         ...
 
     @overload
-    def __getitem__(self, item: slice) -> collections.abc.MutableSequence[T]:
+    def __getitem__(
+        self, item: slice
+    ) -> collections.abc.MutableSequence[T]:  # pragma: nocover
         ...
 
     # Implementation of above signatures.
