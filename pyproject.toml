@@ -2,3 +2,9 @@
 name = 'otable'
 version = '0.0'
 dependencies = ['manuel', 'termtables']
+
+[tool.setuptools.packages.find]
+where = ['src']
+
+[tool.setuptools.package-data]
+otable = ['*.txt', '*.rst', 'py.typed']
