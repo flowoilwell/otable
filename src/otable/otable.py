@@ -43,9 +43,7 @@ class OTable(collections.abc.Sequence[T]):
         if isinstance(item, slice):
             raise ValueError('slicing tables is not supported')
         objects = [column.objects[item] for column in self.columns]
-        names = [column.name for column in self.columns]
-        attributes = [column.attribute for column in self.columns]
-        return ORow(names, objects, attributes)
+        return ORow(self.columns, objects)
 
     def __len__(self) -> int:
         return len(self.columns[0])

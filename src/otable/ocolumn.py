@@ -1,7 +1,20 @@
 """Table data types backed by objects."""
 
 import collections.abc
-from typing import Iterable, Sequence, TypeVar, cast, overload
+from operator import attrgetter
+from typing import Any, Callable, Iterable, Sequence, TypeVar, cast, overload
+
+__all__ = ['OColumn']
+
+
+def attrsetter(name: str) -> Callable[[Any, Any], None]:
+    """Create an attribute setter; analogous to operator.attrgetter."""
+
+    def setter(obj: Any, value: Any) -> None:
+        setattr(obj, name, value)
+
+    return setter
+
 
 T = TypeVar('T')
 
@@ -13,14 +26,23 @@ class OColumn(collections.abc.MutableSequence[T]):
     # the methods, and it provides implementations of most of the interface that depend
     # on the few methods implemented here.
 
-    __slots__ = ('attribute', 'objects', 'name')
+    # pylint: disable=assigning-non-slot
 
-    attribute: str
-    objects: list[object]
+    # The above is because pylint erroneously reports that the "getter" and "setter"
+    # attributes are not listed in the __slots__ definition below, but that's not true.
+
+    __slots__ = ('objects', 'name', 'getter', 'setter')
+
+    objects: list[T]
     name: str
 
     def __init__(
-        self, name: str, objects: Sequence[object], attribute: str | None = None
+        self,
+        name: str,
+        objects: Sequence[T],
+        attribute: str | None = None,
+        getter: Callable[[T], Any] | None = None,
+        setter: Callable[[T, Any], None] | None = None,
     ):
         """Initialize the object.
 
@@ -28,13 +50,25 @@ class OColumn(collections.abc.MutableSequence[T]):
         :param objects: The objects whos values are exposed.
         :param attribute: The attribute of the objects that contain the values to expose
             in the column.  If not provided, the value of "name" is used.
+        :param getter: a function that will extract the column value from an object
+        :param setter: a function that will impute a column value into an object
         """
         self.name = name
         self.objects = list(objects)
-        if attribute is None:
-            self.attribute = name
+        if attribute is not None:
+            attribute_name = attribute
         else:
-            self.attribute = attribute
+            attribute_name = name
+
+        if getter is not None:
+            self.getter = getter
+        else:
+            self.getter = attrgetter(attribute_name)
+
+        if setter is not None:
+            self.setter = setter
+        else:
+            self.setter = attrsetter(attribute_name)
 
     @overload
     def __getitem__(self, item: int) -> T:  # pragma: nocover
@@ -52,9 +86,10 @@ class OColumn(collections.abc.MutableSequence[T]):
             return OColumn(
                 name=self.name,
                 objects=self.objects.__getitem__(item),
-                attribute=self.attribute,
+                getter=self.getter,
+                setter=self.setter,
             )
-        result: T | Sequence[T] = getattr(self.objects[item], self.attribute)
+        result: T | Sequence[T] = self.getter(self.objects[item])
         return result
 
     @overload
@@ -94,7 +129,7 @@ class OColumn(collections.abc.MutableSequence[T]):
             raise ValueError('cardinality mismatch')
 
         for item_index, item_value in zip(range(start, stop, step), value):
-            setattr(self.objects[item_index], self.attribute, item_value)
+            self.setter(self.objects[item_index], item_value)
 
     @overload
     def __delitem__(self, index: int) -> None:  # pragma: nocover

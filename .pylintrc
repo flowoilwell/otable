@@ -2,3 +2,4 @@
 
 disable=
     wrong-import-order,
+    too-many-arguments,

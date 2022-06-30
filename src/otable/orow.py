@@ -1,7 +1,8 @@
 """Table data types backed by objects."""
 
 import collections.abc
-from typing import Iterable, Sequence, TypeVar, cast, overload
+from .ocolumn import OColumn
+from typing import Any, Iterable, Sequence, TypeVar, cast, overload
 
 T = TypeVar('T')
 
@@ -13,24 +14,24 @@ class ORow(collections.abc.MutableSequence[T]):
     # the methods, and it provides implementations of most of the interface that depend
     # on the few methods implemented here.
 
-    __slots__ = ('attributes', 'objects', 'names')
+    __slots__ = ('columns', 'objects')
 
-    attributes: Sequence[str]
+    columns: Sequence[OColumn[Any]]
     objects: Sequence[object]
-    names: Sequence[str]
 
-    def __init__(
-        self, names: Sequence[str], objects: Sequence[object], attributes: Sequence[str]
-    ):
+    def __init__(self, columns: Sequence[OColumn[Any]], objects: Sequence[object]):
         """Initialize the object.
 
-        :param names: The names of the values exposed in the row; normally singular.
+        :param columns: The columns of the objects to expose.
         :param objects: The objects who's values are exposed.
-        :param attributes: The attributes of the objects to expose.
         """
-        self.names = tuple(names)
+        self.columns = tuple(columns)
         self.objects = tuple(objects)
-        self.attributes = tuple(attributes)
+
+    @property
+    def names(self) -> list[str]:
+        """Fetch the column names."""
+        return [column.name for column in self.columns]
 
     @overload
     def __getitem__(self, item: int) -> T:  # pragma: nocover
@@ -47,12 +48,14 @@ class ORow(collections.abc.MutableSequence[T]):
         if isinstance(item, slice):
             raise ValueError('slicing rows is not supported')
         assert isinstance(item, int)
-        return cast(T, getattr(self.objects[item], self.attributes[item]))
+        getter = self.columns[item].getter
+        obj = self.objects[item]
+        return cast(T, getter(obj))
 
     def __getattr__(self, name: str) -> T:
         if name in self.names:
             index = self.names.index(name)
-            return cast(T, getattr(self.objects[index], self.attributes[index]))
+            return self[index]
         raise AttributeError
 
     @overload
@@ -69,7 +72,9 @@ class ORow(collections.abc.MutableSequence[T]):
             raise ValueError('slicing rows is not supported')
         assert isinstance(index, int)
 
-        setattr(self.objects[index], self.attributes[index], value)
+        obj = self.objects[index]
+        setter = self.columns[index].setter
+        setter(obj, value)
 
     @overload
     def __delitem__(self, index: int) -> None:  # pragma: nocover
@@ -92,6 +97,6 @@ class ORow(collections.abc.MutableSequence[T]):
 
     def __repr__(self) -> str:
         values = []
-        for obj, attribute in zip(self.objects, self.attributes):
-            values.append(getattr(obj, attribute))
+        for obj, column in zip(self.objects, self.columns):
+            values.append(column.getter(obj))
         return repr(values)
