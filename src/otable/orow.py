@@ -4,6 +4,7 @@ import collections.abc
 from .ocolumn import OColumn
 from typing import Any, Iterable, Sequence, TypeVar, cast, overload
 
+# pylint: disable=fixme
 # XXX The typing of ORow is not correct.  As written, a row can only contain one type at
 # a time and that is not actually the case.
 T = TypeVar('T')
