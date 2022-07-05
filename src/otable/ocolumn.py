@@ -4,8 +4,6 @@ import collections.abc
 from operator import attrgetter
 from typing import Any, Callable, Iterable, Sequence, TypeVar, cast, overload
 
-__all__ = ['OColumn']
-
 
 def attrsetter(name: str) -> Callable[[Any, Any], None]:
     """Create an attribute setter; analogous to operator.attrgetter."""
