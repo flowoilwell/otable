@@ -4,6 +4,8 @@ import collections.abc
 from .ocolumn import OColumn
 from typing import Any, Iterable, Sequence, TypeVar, cast, overload
 
+# XXX The typing of ORow is not correct.  As written, a row can only contain one type at
+# a time and that is not actually the case.
 T = TypeVar('T')
 
 
