@@ -29,7 +29,7 @@ class OColumn(collections.abc.MutableSequence[T]):
     # The above is because pylint erroneously reports that the "getter" and "setter"
     # attributes are not listed in the __slots__ definition below, but that's not true.
 
-    __slots__ = ('objects', 'name', 'getter', 'setter')
+    __slots__ = ('name', 'objects', 'getter', 'setter')
 
     objects: list[T]
     name: str
