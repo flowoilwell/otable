@@ -162,14 +162,62 @@ mutated.
 ├────────┼──────┼────────┤
 │ Tripod │ 3    │ Alice  │
 └────────┴──────┴────────┘
->>> table[2][2] = 'Charlie'
+>>> table[2][2] = 'Alice in Wonderland'
 >>> table
-┌────────┬──────┬─────────┐
-│ name   │ legs │ friend  │
-╞════════╪══════╪═════════╡
-│ Ralf   │ 4    │ Charlie │
-├────────┼──────┼─────────┤
-│ Simon  │ 0    │ Bob     │
-├────────┼──────┼─────────┤
-│ Tripod │ 3    │ Charlie │
-└────────┴──────┴─────────┘
+┌────────┬──────┬─────────────────────┐
+│ name   │ legs │ friend              │
+╞════════╪══════╪═════════════════════╡
+│ Ralf   │ 4    │ Alice in Wonderland │
+├────────┼──────┼─────────────────────┤
+│ Simon  │ 0    │ Bob                 │
+├────────┼──────┼─────────────────────┤
+│ Tripod │ 3    │ Alice in Wonderland │
+└────────┴──────┴─────────────────────┘
+
+.. code:python
+
+    # We need to put Alice's name back for cleanliness' sake in the following sections.
+    alice.name = 'Alice'
+
+
+Getter functions
+----------------
+
+We may want to represent a value in a table that is not accessible as an attribute on an
+object.  For example, we may want to represent the result of calling a function.  Getter
+functions provide that ability.
+
+For example, if we wanted to model animals having more than one friend, we could change
+the friend column definition to model that information as a list of friends.
+
+.. code:: python
+
+    friends = OColumn('friends', [[alice], [bob], [alice, bob]], attribute='name')
+
+That seems to make sense, but the containing table fails to render correctly with the
+following error::
+
+    AttributeError: 'list' object has no attribute 'name'
+
+That error makes sense because we told the column that it should look up the ``name``
+attribute on each object to find the column's value, but the objects are lists which do
+not have that attribute.  Instead of specifying an attribute, we can specify a function
+that will extract the value we need.
+
+.. code:: python
+
+    friend_getter = lambda friends: ','.join(friend.name for friend in friends)
+    friends = OColumn('friends', [[alice], [bob], [alice, bob]], getter=friend_getter)
+
+Now the table will render correctly.
+
+>>> OTable(columns=(names, legs, friends))
+┌────────┬──────┬───────────┐
+│ name   │ legs │ friends   │
+╞════════╪══════╪═══════════╡
+│ Ralf   │ 4    │ Alice     │
+├────────┼──────┼───────────┤
+│ Simon  │ 0    │ Bob       │
+├────────┼──────┼───────────┤
+│ Tripod │ 3    │ Alice,Bob │
+└────────┴──────┴───────────┘

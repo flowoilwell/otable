@@ -29,7 +29,7 @@ class TestOColumn(unittest.TestCase):
 
     def test_creation(self):
         """Creating an OColumn instance works."""
-        OColumn([], 'attribute')
+        OColumn('attribute', [])
 
     def test_len(self):
         """The length of the column reflects the length of the underlying sequence."""
