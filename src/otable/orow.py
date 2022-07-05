@@ -29,9 +29,9 @@ class ORow(collections.abc.MutableSequence[T]):
         self.objects = tuple(objects)
 
     @property
-    def names(self) -> list[str]:
+    def names(self) -> Sequence[str]:
         """Fetch the column names."""
-        return [column.name for column in self.columns]
+        return tuple(column.name for column in self.columns)
 
     @overload
     def __getitem__(self, item: int) -> T:  # pragma: nocover
