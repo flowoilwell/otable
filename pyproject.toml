@@ -8,3 +8,6 @@ where = ['src']
 
 [tool.setuptools.package-data]
 otable = ['*.txt', '*.rst', 'py.typed']
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = ['wrong-import-order', 'too-many-arguments']
