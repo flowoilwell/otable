@@ -53,10 +53,10 @@ class ORow(collections.abc.MutableSequence[T]):
         return cast(T, getter(obj))
 
     def __getattr__(self, name: str) -> T:
-        if name in self.names:
-            index = self.names.index(name)
-            return self[index]
-        raise AttributeError
+        if name not in self.names:
+            raise AttributeError
+        index = self.names.index(name)
+        return self[index]
 
     @overload
     def __setitem__(self, item: int, value: T) -> None:  # pragma: nocover
